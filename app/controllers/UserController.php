@@ -67,5 +67,17 @@ class UserController extends \BaseController {
     public function update($id) {
         //
     }
-    
+
+    public function changePassword(){
+        $oldPassword = Input::get('oldPassword');
+        $newPassword = Input::get('newPassword');
+        if(Hash::check($oldPassword,Auth::user()->password)){
+            Auth::user()->password=$newPassword;
+            if(Auth::user()->save()){
+                return Response::make('true', 200);
+            }
+            return Response::make('false', 200);
+        }
+        return Response::make('', 404);
+    }
 }

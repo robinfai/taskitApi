@@ -40,12 +40,41 @@ class UserTest extends TestCase {
     }
 
     /**
+     * @dataProvider UserDataProvider
+     */
+    public function testChangePassword($username, $password, $email) {
+        $userData = array('username' => $username, 'password' => $password, 'email' => $email);
+        $this->client->request('POST', '/login', $userData);
+
+        $changePasswordData= array('oldPassword'=>$userData['password'],'newPassword'=>$userData['password'].'new');
+        $this->client->request('POST', '/user/changePassword',$changePasswordData);
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertTrue($responseData);
+
+
+        $userData = array('username' => $username, 'password' => $password, 'email' => $email);
+        $this->client->request('POST', '/login', $userData);
+        $id = $this->client->getResponse()->getContent();
+        $this->assertTrue($id==0);
+
+
+        $userData = array('username' => $username, 'password' => $changePasswordData['newPassword'], 'email' => $email);
+        $this->client->request('POST', '/login', $userData);
+        $id = $this->client->getResponse()->getContent();
+        $this->client->request('GET', '/user/' . $id);
+        $responseData = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertTrue($responseData['username'] == $userData['username']);
+    }
+
+    /**
      * 测试用户数据库
      * @return array
      */
     public function UserDataProvider() {
         $data = array();
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 1; $i++) {
             $username = 'username' . $i;
             $data[] = array('username' => $username, 'password' => $username, 'email' => $username . '@robinfai.com');
         }

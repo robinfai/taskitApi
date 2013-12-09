@@ -33,6 +33,7 @@ Route::group(array('before' => 'auth'), function() {
         return \Illuminate\Http\JsonResponse::create('true');
     });
     Route::any('user/list', 'UserController@index');
+    Route::any('user/changePassword', 'UserController@changePassword');
     Route::any('user/{id}', 'UserController@show');
     Route::any('user/edit/{id}', 'UserController@edit');
 });
