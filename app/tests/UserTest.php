@@ -39,6 +39,10 @@ class UserTest extends TestCase {
         $this->assertTrue($responseData['username'] == $userData['username']);
     }
 
+    /**
+     * 测试用户数据库
+     * @return array
+     */
     public function UserDataProvider() {
         $data = array();
         for ($i = 0; $i < 10; $i++) {
