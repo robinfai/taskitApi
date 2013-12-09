@@ -35,7 +35,7 @@ class User extends Model implements UserInterface, RemindableInterface {
      *
      * @var array
      */
-    protected $hidden = array('password');
+    protected $hidden = array('password','deleted_at');
 
     /**
      * Get the unique identifier for the user.
@@ -52,19 +52,18 @@ class User extends Model implements UserInterface, RemindableInterface {
      * @return string
      */
     public function getAuthPassword() {
-        return Hash::make($this->password);
+        return $this->password;
     }
 
     public static function boot() {
 
         parent::boot();
 
-        static::saving(function($model) {
-//            if (Hash::needsRehash($model->password)) {
+        static::saving(function($model)
+        {
+            if (Hash::needsRehash($model->password)) {
                 $model->password = Hash::make($model->password);
-//            }
-                echo 1;
-                exit;
+            }
             return true;
         });
     }
@@ -76,6 +75,15 @@ class User extends Model implements UserInterface, RemindableInterface {
      */
     public function getReminderEmail() {
         return $this->email;
+    }
+    
+    public function getRegisterValidator() {
+        return Validator::make(
+                        $this->getAttributes(), array(
+                    'username' => 'required|min:5|max:32|unique:users',
+                    'password' => 'required|min:8',
+                    'email' => 'required|email|unique:users'
+        ));
     }
 
 }

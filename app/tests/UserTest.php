@@ -17,17 +17,17 @@ class UserTest extends TestCase {
      */
     public function testCreateUser($username, $password, $email) {
         $userData = array('username' => $username, 'password' => $password, 'email' => $email);
-        $this->client->request('GET', '/user/create', $userData);
+        $this->client->request('POST', '/register', $userData);
         $id = $this->client->getResponse()->getContent();
         $this->client->request('GET', '/user/' . $id);
         $responseData = json_decode($this->client->getResponse()->getContent(), true);
-
+        
         $this->assertTrue($responseData['username'] == $userData['username']);
     }
 
     public function UserDataProvider() {
         $data = array();
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 1; $i++) {
             $username = 'user' . $i;
             $data[] = array('username' => $username, 'password' => $username, 'email' => $username . '@robinfai.com');
         }

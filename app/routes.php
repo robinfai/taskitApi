@@ -15,4 +15,24 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
-Route::resource('user', 'UserController');
+Route::any('register', 'UserController@create');
+Route::any('login', function(){
+        $username = Input::get('email');
+        $password = Input::get('password');
+        $attempt = array('email' => $username, 'password' => $password);
+        if (Auth::attempt($attempt)) {
+            return Response::make(Auth::user()->id, 200);
+        }else{
+            return Response::make(0, 200);
+        }
+    });
+    
+Route::group(array('before' => 'auth'), function() {
+    Route::any('logout', function() {
+        Auth::logout();
+        return \Illuminate\Http\JsonResponse::create('true');
+    });
+    Route::any('user/list', 'UserController@index');
+    Route::any('user/{id}', 'UserController@show');
+    Route::any('user/edit/{id}', 'UserController@edit');
+});

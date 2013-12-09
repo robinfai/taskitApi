@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends \BaseController {
 
@@ -21,7 +22,7 @@ class UserController extends \BaseController {
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 用户注册
      *
      * @return Response
      */
@@ -31,26 +32,22 @@ class UserController extends \BaseController {
         $user->username = Input::get('username');
         $user->password = Input::get('password');
         $user->email = Input::get('email');
-        if($user->save()){
-            return Response::make($user->id, 200);
-        }else{
-            return Response::make($user->getErrors(),404);
+
+        $validator = $user->getRegisterValidator();
+        if ($validator->fails()) {
+            $messages = $validator->messages();
+            return Response::make($messages, 200);
         }
-
-        
+        if ($user->save()) {
+            Auth::login($user);
+            return Response::make($user->id, 200);
+        } else {
+            return Response::make($user->getErrors(), 404);
+        }
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @return Response
-     */
-    public function store() {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * 用户信息获取
      *
      * @param  int  $id
      * @return Response
@@ -60,17 +57,7 @@ class UserController extends \BaseController {
         $response = Response::make(User::findOrFail($id)->toJson(), 200);
         return $response;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit($id) {
-        //
-    }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -80,15 +67,5 @@ class UserController extends \BaseController {
     public function update($id) {
         //
     }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id) {
-        //
-    }
-
+    
 }
