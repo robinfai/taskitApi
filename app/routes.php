@@ -15,6 +15,14 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+Route::get('mailTest', function()
+{
+    Mail::send('emails.welcome', array(), function($message)
+    {
+        $message->to('robinfai@me.com', 'John Smith')->subject('Welcome!');
+    });
+    //return View::make('hello');
+});
 Route::any('register', 'UserController@create');
 Route::any('login', function(){
         $username = Input::get('email');
