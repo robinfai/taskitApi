@@ -23,6 +23,39 @@ Route::get('mailTest', function()
     });
     //return View::make('hello');
 });
+Route::get('password/remind', function()
+{
+    if(Input::get('email')){
+        $credentials = array('email' => Input::get('email'));
+
+        return Password::remind($credentials);
+    }
+    if(Session::has('error')){
+        echo Session::get('error');
+    }elseif(Session::has('success')){
+        echo 'An e-mail with the password reset has been sent.';
+    }
+});
+Route::get('password/reset/{token}', function($token)
+{
+    return View::make('auth.reset')->with('token', $token);
+});Route::post('password/reset/{token}', function()
+{
+    $credentials = array(
+        'email' => Input::get('email'),
+        'password' => Input::get('password'),
+        'password_confirmation' => Input::get('password_confirmation')
+    );
+
+    return Password::reset($credentials, function($user, $password)
+    {
+        $user->password = Hash::make($password);
+
+        $user->save();
+
+        return Redirect::to('home');
+    });
+});
 Route::any('register', 'UserController@create');
 Route::any('login', function(){
         $username = Input::get('email');
