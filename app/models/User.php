@@ -10,11 +10,14 @@ use Illuminate\Auth\Reminders\RemindableInterface;
  */
 class User extends Model implements UserInterface, RemindableInterface {
 
-    protected static $rules = array(
-        'username' => 'required',
-        'password' => 'required',
-        'email' => 'required',
-    );
+
+    public function myBoards(){
+        return $this->hasMany('board','id','creator_id');
+    }
+
+    public function boards(){
+        return $this->belongsToMtany('Board','board_members','user_id','board_id');
+    }
 
     /**
      * active soft delete
