@@ -11,11 +11,14 @@ class BoardTest extends TestCase{
 
     public static $isTruncate = false;
 
+    public $list;
+
     public function setUp() {
         parent::setUp();
 
         $user = User::all()->first();
-        Auth::login($user);
+        //Auth::login($user);
+        $this->be($user);
 
         Board::boot();
         if (!self::$isTruncate) {
@@ -32,6 +35,21 @@ class BoardTest extends TestCase{
 
         $data = array('title'=>$title);
         $this->client->request('POST','/board/create',$data);
+        $board = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertTrue($data['title'] == $board['title']);
+        return $board;
+    }
+
+    /**
+     * 测试更新Board
+     * @depends testCreate
+     * @dataProvider BoardDataProvider
+     */
+    public function testUpdate($title){
+        $board = Board::where('title','=',$title)->first();
+        $data = array('title'=>$title.'-update');
+        $this->client->request('POST','/board/update/'.$board->id,$data);
         $board = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertTrue($data['title'] == $board['title']);

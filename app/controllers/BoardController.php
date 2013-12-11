@@ -19,7 +19,7 @@ class BoardController extends BaseController{
         $user = Auth::user();
         $board->creator_id = $user->id;
 
-        $validator = $board->getCreateValidator();
+        $validator = $board->getValidator();
         if ($validator->fails()) {
             $messages = $validator->messages();
             return Response::make($messages, 200);
@@ -31,6 +31,34 @@ class BoardController extends BaseController{
             $boardMember->user_id = $user->id;
             $boardMember->is_admin = 1;
             $boardMember->save();
+            return Response::make($board->toJson(), 200);
+        } else {
+            return Response::make($board->getErrors(), 404);
+        }
+    }
+
+    /**
+     * 更新boards
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        $board = Board::findOrFail($id);
+        /* @var $board Board */
+        $board->title = Input::get('title');
+
+        if(!$board->member(Auth::user()->id)){
+            return Response::make('user not board member', 200);
+        }
+
+        $validator = $board->getValidator();
+        if ($validator->fails()) {
+            $messages = $validator->messages();
+            return Response::make($messages, 200);
+        }
+
+        if ($board->save()) {
             return Response::make($board->toJson(), 200);
         } else {
             return Response::make($board->getErrors(), 404);

@@ -49,10 +49,10 @@ class Board extends Model{
     }
 
     /**
-     * 创建验证规则
+     * 验证规则
      * @return \Illuminate\Validation\Validator
      */
-    public function getCreateValidator() {
+    public function getValidator() {
         return Validator::make(
             $this->getAttributes(), array(
             'title' => 'required',
