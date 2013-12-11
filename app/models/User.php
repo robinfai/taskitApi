@@ -4,6 +4,7 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
 /**
+ * @property int $id
  * @property string $username 用户名
  * @property string $password 密码
  * @property string $email 邮箱

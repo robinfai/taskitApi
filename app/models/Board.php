@@ -9,9 +9,9 @@
 /**
  * Class Board
  *
+ * @property int $id
  * @property string $title 标题
  * @property int $creator_id 创建人ID
- * @property string $email 邮箱
  */
 class Board extends Model{
 
@@ -46,5 +46,17 @@ class Board extends Model{
      */
     public function member($id){
         return $this->members()->where('user_id','=',$id)->first();
+    }
+
+    /**
+     * 创建验证规则
+     * @return \Illuminate\Validation\Validator
+     */
+    public function getCreateValidator() {
+        return Validator::make(
+            $this->getAttributes(), array(
+            'title' => 'required',
+            'creator_id'=>'required|integer'
+        ));
     }
 } 

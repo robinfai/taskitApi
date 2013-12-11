@@ -17,6 +17,7 @@ class CreateBoardsTable extends Migration {
             $table->increments('id');
             $table->string('title',32);
             $table->integer('creator_id');
+            $table->boolean('is_admin');
             $table->softDeletes();
             $table->timestamps();
         });

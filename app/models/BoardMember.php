@@ -9,6 +9,9 @@
 /**
  * Class BoardMember
  * board成员表，记录用户
+ * @property int $board_id board id
+ * @property int $user_id user id
+ * @property bool $is_admin 是否为管理员
  */
 class BoardMember extends Model {
 

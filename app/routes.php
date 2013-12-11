@@ -69,6 +69,8 @@ Route::any('login', function(){
     });
     
 Route::group(array('before' => 'auth'), function() {
+
+    //用户相关路由
     Route::any('logout', function() {
         Auth::logout();
         return \Illuminate\Http\JsonResponse::create('true');
@@ -77,4 +79,8 @@ Route::group(array('before' => 'auth'), function() {
     Route::any('user/changePassword', 'UserController@changePassword');
     Route::any('user/{id}', 'UserController@show');
     Route::any('user/edit/{id}', 'UserController@edit');
+    //用户相关路由
+
+    //board相关路由
+    Route::any('board/create', 'BoardController@create');
 });
