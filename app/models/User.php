@@ -10,13 +10,20 @@ use Illuminate\Auth\Reminders\RemindableInterface;
  */
 class User extends Model implements UserInterface, RemindableInterface {
 
-
+    /**
+     * 关系定义，拥有多个Board，我创建的board
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function myBoards(){
         return $this->hasMany('board','id','creator_id');
     }
 
+    /**
+     * 关系定义，多对多于Board，获取当前用户参与的所有board模型
+     * @return mixed
+     */
     public function boards(){
-        return $this->belongsToMtany('Board','board_members','user_id','board_id');
+        return $this->belongsToMany('Board','board_members','user_id','board_id');
     }
 
     /**

@@ -14,11 +14,37 @@
  * @property string $email 邮箱
  */
 class Board extends Model{
+
+    /**
+     * 关系定义，从属于User，获取
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function creator(){
         return $this->belongsTo('user','creator_id','id');
     }
 
+    /**
+     * 关系定义，拥有多个User，获取所有的成员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function members(){
-        return $this->belongsToMany('User','board_members','board_id','user_id');
+        return $this->hasMany('BoardMember','board_id','id');
+    }
+
+    /**
+     * 关系定义，拥有多个User，获取所有的管理员
+     * @return mixed
+     */
+    public function admin(){
+        return $this->members()->where('is_admin','=','1');
+    }
+
+    /**
+     * 根据ID获取成员模型
+     * @param int $id
+     * @return mixed
+     */
+    public function member($id){
+        return $this->members()->where('user_id','=',$id)->first();
     }
 } 
