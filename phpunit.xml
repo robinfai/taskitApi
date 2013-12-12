@@ -12,7 +12,9 @@
 >
     <testsuites>
         <testsuite name="Application Test Suite">
-            <directory>./app/tests/</directory>
+            <!--<directory>./app/tests/</directory>-->
+            <file>./app/tests/UserTest.php</file>
+            <file>./app/tests/BoardTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
