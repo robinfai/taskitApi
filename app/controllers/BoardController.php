@@ -64,4 +64,11 @@ class BoardController extends BaseController{
             return Response::make($board->getErrors(), 404);
         }
     }
+
+    /**
+     * 获取board列表
+     */
+    public function index(){
+        return Response::make(Auth::user()->boards->toJson(), 200);
+    }
 } 

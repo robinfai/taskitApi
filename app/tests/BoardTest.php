@@ -67,4 +67,10 @@ class BoardTest extends TestCase{
         }
         return $data;
     }
+
+    public function testGetList(){
+        $this->client->request('POST','/board');
+        $list = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue(is_array($list));
+    }
 } 
