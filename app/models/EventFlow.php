@@ -17,4 +17,11 @@
  */
 class EventFlow extends Model{
 
+    /**
+     * 关系定义，从属于User，获取
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user(){
+        return $this->belongsTo('User');
+    }
 } 

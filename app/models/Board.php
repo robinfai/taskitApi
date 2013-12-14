@@ -40,6 +40,14 @@ class Board extends Model{
     }
 
     /**
+     * 关系定义,拥有多个事件流,获取所有的事件流模型
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function eventFlows(){
+        return $this->hasMany('EventFlow');
+    }
+
+    /**
      * 根据ID获取成员模型
      * @param int $id
      * @return mixed
