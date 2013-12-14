@@ -12,7 +12,7 @@ class CreateEventFlowTable extends Migration {
 	 */
 	public function up()
 	{
-        Schema::create('event_flow', function(Blueprint $table)
+        Schema::create('event_flows', function(Blueprint $table)
         {
             $table->increments('id');
             $table->integer('board_id');
@@ -29,7 +29,7 @@ class CreateEventFlowTable extends Migration {
 	 */
 	public function down()
 	{
-        Schema::drop('event_flow');
+        Schema::drop('event_flows');
 	}
 
 }

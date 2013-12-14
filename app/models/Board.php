@@ -59,4 +59,13 @@ class Board extends Model{
             'creator_id'=>'required|integer'
         ));
     }
+
+    public function addEventFlow($event){
+        $eventFlow = new EventFlow();
+        $eventFlow->board_id = $this->id;
+        $eventFlow->user_id = Auth::user()->id;
+        $eventFlow->event = $event;
+        $eventFlow->save();
+        return $eventFlow;
+    }
 } 

@@ -26,6 +26,7 @@ class BoardController extends BaseController{
         }
 
         if ($board->save()) {
+            $board->addEventFlow('创建了这个面板');
             $boardMember = new BoardMember();
             $boardMember->board_id = $board->id;
             $boardMember->user_id = $user->id;
@@ -59,6 +60,8 @@ class BoardController extends BaseController{
         }
 
         if ($board->save()) {
+            $originalTitle = $board->getOriginal('title');
+            $board->addEventFlow("重命名面板标题(原标题:{$originalTitle})");
             return Response::make($board->toJson(), 200);
         } else {
             return Response::make($board->getErrors(), 404);
