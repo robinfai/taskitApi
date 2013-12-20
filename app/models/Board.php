@@ -68,6 +68,11 @@ class Board extends Model{
         ));
     }
 
+    /**
+     * 添加事件流
+     * @param $event
+     * @return EventFlow
+     */
     public function addEventFlow($event){
         $eventFlow = new EventFlow();
         $eventFlow->board_id = $this->id;

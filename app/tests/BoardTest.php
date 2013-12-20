@@ -56,12 +56,31 @@ class BoardTest extends TestCase{
     }
 
     /**
+     * 测试Board添加成员
+     * @depends testUpdate
+     * @dataProvider BoardDataProvider
+     */
+    public function testAddMember($title){
+        $board = Board::where('title','=',$title.'-update')->first();
+        $member = User::all()->last();
+        $data = array('user_id'=>$member->id);
+        $this->client->request('POST','/board/addMember/'.$board->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($data['user_id'] == $response['user_id']);
+        $this->client->request('POST','/board/addMember/'.$board->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue(count($response['board_id'])===1);
+    }
+
+    /**
      * Board测试数据提供器
      * @return array
      */
     public function BoardDataProvider() {
         $data = array();
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $title = 'title' . $i;
             $data[] = array('title' => $title);
         }

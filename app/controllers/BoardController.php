@@ -74,4 +74,26 @@ class BoardController extends BaseController{
     public function index(){
         return Response::make(Auth::user()->boards->toJson(), 200);
     }
+
+    public function addMember($id)
+    {
+        $board = Board::findOrFail($id);
+        /* @var $board Board */
+        $BoardMember = new BoardMember();
+        $BoardMember->board_id = $id;
+        $BoardMember->user_id = Input::get('user_id');
+
+        $validator = $BoardMember->getValidator();
+        if ($validator->fails()) {
+            $messages = $validator->messages();
+            return Response::make($messages, 200);
+        }
+
+        if($BoardMember->save()){
+            $board->addEventFlow("添加成员".$BoardMember->user_id);
+            return Response::make($BoardMember->toJson());
+        }else{
+            return Response::make($BoardMember->getErrors(), 200);
+        }
+    }
 } 

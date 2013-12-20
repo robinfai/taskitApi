@@ -14,10 +14,11 @@ class CreateBoardMembersTable extends Migration {
 	{
         Schema::create('board_members', function(Blueprint $table)
         {
-            $table->increments('board_id');
+            $table->integer('board_id');
             $table->integer('user_id');
             $table->boolean('is_admin');
             $table->softDeletes();
+            $table->primary(array('board_id', 'user_id'));
             $table->timestamps();
         });
 	}

@@ -74,7 +74,7 @@ class UserTest extends TestCase {
      */
     public function UserDataProvider() {
         $data = array();
-        for ($i = 0; $i < 1; $i++) {
+        for ($i = 0; $i < 2; $i++) {
             $username = 'username' . $i;
             $data[] = array('username' => $username, 'password' => $username, 'email' => $username . '@robinfai.com');
         }

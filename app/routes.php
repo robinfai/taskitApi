@@ -84,5 +84,6 @@ Route::group(array('before' => 'auth'), function() {
     //board相关路由
     Route::any('board/create', 'BoardController@create');
     Route::any('board/update/{id}', 'BoardController@update');
+    Route::any('board/addMember/{id}', 'BoardController@addMember');
     Route::any('board', 'BoardController@index');
 });

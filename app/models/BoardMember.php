@@ -31,4 +31,15 @@ class BoardMember extends Model {
         return $this->user->username;
     }
 
+    /**
+     * 验证规则
+     * @return \Illuminate\Validation\Validator
+     */
+    public function getValidator() {
+        return Validator::make(
+            $this->getAttributes(), array(
+                'board_id' => 'required|unique_with:board_members,board_id,user_id',
+                'user_id' => 'required',
+        ));
+    }
 } 

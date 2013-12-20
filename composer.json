@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"require": {
 		"laravel/framework": "4.0.*",
-                "way/database": "dev-master"
+        "felixkiss/uniquewith-validator": "dev-master"
 	},
 	"autoload": {
 		"classmap": [
