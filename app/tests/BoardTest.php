@@ -75,6 +75,32 @@ class BoardTest extends TestCase{
     }
 
     /**
+     * 测试Board移除成员
+     * @depends testAddMember
+     * @dataProvider BoardDataProvider
+     */
+    public function testRemoveMember($title){
+        $board = Board::where('title','=',$title.'-update')->first();
+        $member = User::all()->last();
+        $data = array('user_id'=>$member->id);
+        $this->client->request('POST','/board/removeMember/'.$board->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($response);
+        $this->client->request('POST','/board/removeMember/'.$board->id,$data);
+        $this->assertResponseStatus(404);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue(!$response);
+
+        $member = User::all()->first();
+        $data = array('user_id'=>$member->id);
+        $this->client->request('POST','/board/removeMember/'.$board->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($response['status']==false);
+    }
+
+    /**
      * Board测试数据提供器
      * @return array
      */

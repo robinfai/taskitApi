@@ -75,6 +75,11 @@ class BoardController extends BaseController{
         return Response::make(Auth::user()->boards->toJson(), 200);
     }
 
+    /**
+     * 添加成员
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
     public function addMember($id)
     {
         $board = Board::findOrFail($id);
@@ -94,6 +99,29 @@ class BoardController extends BaseController{
             return Response::make($BoardMember->toJson());
         }else{
             return Response::make($BoardMember->getErrors(), 200);
+        }
+    }
+
+    /**
+     * 移除成员
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removeMember($id){
+        $board = Board::findOrFail($id);
+        /* @var $board Board */
+        $BoardMember = $board->member(Input::get('user_id'));
+        /* @var $BoardMember BoardMember */
+        if($BoardMember){
+            if($BoardMember->is_admin){
+                return Response::make(json_encode(array('status'=>false,'message'=>'移除管理员失败,请先修改用户权限')));
+            }else{
+                BoardMember::where('board_id', '=', $BoardMember->board_id)->where('user_id', '=', $BoardMember->user_id)->delete();
+                $board->addEventFlow("移除成员".$BoardMember->user_id);
+                return Response::make(json_encode(true));
+            }
+        }else{
+            return Response::make(json_encode(false),404);
         }
     }
 } 
