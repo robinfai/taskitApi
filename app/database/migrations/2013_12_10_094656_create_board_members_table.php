@@ -17,7 +17,7 @@ class CreateBoardMembersTable extends Migration {
             $table->increments('id');
             $table->integer('board_id');
             $table->integer('user_id');
-            $table->boolean('is_admin');
+            $table->boolean('is_admin')->default(0);
             $table->softDeletes();
             $table->unique(array('board_id', 'user_id'));
             $table->timestamps();
