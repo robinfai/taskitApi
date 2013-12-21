@@ -104,8 +104,37 @@ class BoardTest extends TestCase{
     }
 
     /**
+     * 测试Board移除管理员
+     * @depends testAddMember
+     * @dataProvider BoardDataProvider
+     */
+    public function testRemoveAdmin($title){
+        //测试移除管理员
+        $board = Board::where('title','=',$title.'-update')->first();
+        $member = User::all()->last();
+        $data = array('user_id'=>$member->id);
+        $this->client->request('POST','/board/removeAdmin/'.$board->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($response);
+
+        //测试将普通成员进行移除管理员时的反馈
+        $this->client->request('POST','/board/removeAdmin/'.$board->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($response['status']==false);
+
+        //测试不存在的用户或者个成员移除管理员时的反馈
+        $data = array('user_id'=>0);
+        $this->client->request('POST','/board/removeAdmin/'.$board->id,$data);
+        $this->assertResponseStatus(404);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue(!$response);
+    }
+
+    /**
      * 测试Board移除成员
-     * @depends testAddAdmin
+     * @depends testRemoveAdmin
      * @dataProvider BoardDataProvider
      */
     public function testRemoveMember($title){

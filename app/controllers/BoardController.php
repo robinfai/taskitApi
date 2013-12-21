@@ -95,7 +95,7 @@ class BoardController extends BaseController{
         }
 
         if($BoardMember->save()){
-            $board->addEventFlow("添加成员".$BoardMember->username);
+            $board->addEventFlow("添加成员".$BoardMember->user->username);
             return Response::make($BoardMember->toJson());
         }else{
             return Response::make($BoardMember->getErrors(), 200);
@@ -118,7 +118,7 @@ class BoardController extends BaseController{
             }else{
                 $BoardMember->delete();
                 //BoardMember::where('board_id', '=', $BoardMember->board_id)->where('user_id', '=', $BoardMember->user_id)->delete();
-                $board->addEventFlow("移除成员".$BoardMember->username);
+                $board->addEventFlow("移除成员".$BoardMember->user->username);
                 return Response::make(json_encode(true));
             }
         }else{
@@ -142,7 +142,31 @@ class BoardController extends BaseController{
             }else{
                 $BoardMember->is_admin = 1;
                 $BoardMember->save();
-                $board->addEventFlow("修改成员({$BoardMember->username})为管理员");
+                $board->addEventFlow("修改成员({$BoardMember->user->username})为管理员");
+                return Response::make(json_encode(true));
+            }
+        }else{
+            return Response::make(json_encode(false),404);
+        }
+    }
+
+    /**
+     * 移除管理员
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removeAdmin($id){
+        $board = Board::findOrFail($id);
+        /* @var $board Board */
+        $BoardMember = $board->member(Input::get('user_id'));
+        /* @var $BoardMember BoardMember */
+        if($BoardMember){
+            if(!$BoardMember->is_admin){
+                return Response::make(json_encode(array('status'=>false,'message'=>'用户已成为普通成员')));
+            }else{
+                $BoardMember->is_admin = 0;
+                $BoardMember->save();
+                $board->addEventFlow("修改管理员({$BoardMember->user->username})为普通成员");
                 return Response::make(json_encode(true));
             }
         }else{
