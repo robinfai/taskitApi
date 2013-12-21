@@ -86,5 +86,6 @@ Route::group(array('before' => 'auth'), function() {
     Route::any('board/update/{id}', 'BoardController@update');
     Route::any('board/addMember/{id}', 'BoardController@addMember');
     Route::any('board/removeMember/{id}', 'BoardController@removeMember');
+    Route::any('board/addAdmin/{id}', 'BoardController@addAdmin');
     Route::any('board', 'BoardController@index');
 });

@@ -75,8 +75,37 @@ class BoardTest extends TestCase{
     }
 
     /**
-     * 测试Board移除成员
+     * 测试Board修改成员为管理员
      * @depends testAddMember
+     * @dataProvider BoardDataProvider
+     */
+    public function testAddAdmin($title){
+        //测试普通用户添加为管理员
+        $board = Board::where('title','=',$title.'-update')->first();
+        $member = User::all()->last();
+        $data = array('user_id'=>$member->id);
+        $this->client->request('POST','/board/addAdmin/'.$board->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($response);
+
+        //测试用户已经是管理员时,再次修改为管理员
+        $this->client->request('POST','/board/addAdmin/'.$board->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($response['status']==false);
+
+        //测试不存在的用户或者个成员添加为管理员时的反馈
+        $data = array('user_id'=>0);
+        $this->client->request('POST','/board/addAdmin/'.$board->id,$data);
+        $this->assertResponseStatus(404);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue(!$response);
+    }
+
+    /**
+     * 测试Board移除成员
+     * @depends testAddAdmin
      * @dataProvider BoardDataProvider
      */
     public function testRemoveMember($title){
