@@ -14,7 +14,7 @@ env:
 
 # execute any number of scripts before the test run, custom env's are available as variables
 before_script:
-  - php
+  - php artisan migrate
   - mysql -e 'create database taskit;'
 
 # omitting "script:" will default to phpunit
@@ -28,4 +28,3 @@ notifications:
 
 install:
    - composer install
-   - php artisan migrate
