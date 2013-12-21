@@ -15,6 +15,7 @@
             <!--<directory>./app/tests/</directory>-->
             <file>./app/tests/UserTest.php</file>
             <file>./app/tests/BoardTest.php</file>
+            <file>./app/tests/CardListTest.php</file>
         </testsuite>
     </testsuites>
 </phpunit>

@@ -89,4 +89,7 @@ Route::group(array('before' => 'auth'), function() {
     Route::any('board/addAdmin/{id}', 'BoardController@addAdmin');
     Route::any('board/removeAdmin/{id}', 'BoardController@removeAdmin');
     Route::any('board', 'BoardController@index');
+
+    //cardList相关路由
+    Route::any('cardList/create', 'CardListController@create');
 });
