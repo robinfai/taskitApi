@@ -28,3 +28,4 @@ notifications:
 
 install:
    - composer install
+   - php artisan migrate
