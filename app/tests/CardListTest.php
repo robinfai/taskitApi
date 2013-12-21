@@ -40,6 +40,21 @@ class CardListTest extends TestCase{
     }
 
     /**
+     * 测试更新Board
+     * @depends testCreate
+     * @dataProvider CardListDataProvider
+     */
+    public function testUpdate($title){
+        $cardList = CardList::where('title','=',$title)->first();
+
+        $data = array('title'=>$title.'-update','id'=>$cardList->id);
+        $this->client->request('POST','/cardList/update/'.$cardList->id,$data);
+        $board = json_decode($this->client->getResponse()->getContent(), true);
+
+        $this->assertTrue($data['title'] == $board['title']);
+    }
+
+    /**
      * Board测试数据提供器
      * @return array
      */

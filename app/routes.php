@@ -92,4 +92,5 @@ Route::group(array('before' => 'auth'), function() {
 
     //cardList相关路由
     Route::any('cardList/create', 'CardListController@create');
+    Route::any('cardList/update/{id}', 'CardListController@update');
 });
