@@ -32,6 +32,14 @@ class Board extends Model{
     }
 
     /**
+     * 关系定义，拥有多个cardList，获取所有的卡片列表
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cardLists(){
+        return $this->hasMany('CardList','board_id','id');
+    }
+
+    /**
      * 关系定义，拥有多个User，获取所有的管理员
      * @return mixed
      */

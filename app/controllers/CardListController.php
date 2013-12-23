@@ -63,4 +63,20 @@ class CardListController extends BaseController{
             return Response::make($cardList->getErrors(), 404);
         }
     }
+
+    /**
+     * cardList列表
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function index($id){
+        $board = Board::findOrFail($id);
+        /* @var $board Board*/
+        if($board->member(Auth::user()->id)){
+            return Response::make($board->cardLists->toJson(), 200);
+        }else{
+            return Response::make('card list not found', 404);
+        }
+
+    }
 } 

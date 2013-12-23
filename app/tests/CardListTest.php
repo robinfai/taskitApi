@@ -54,8 +54,19 @@ class CardListTest extends TestCase{
         $this->assertTrue($data['title'] == $board['title']);
     }
 
+
     /**
-     * Board测试数据提供器
+     * CardList
+     */
+    public function testGetList(){
+        $board = Auth::user()->boards->first();
+        $this->client->request('GET','/cardList/getList/'.$board->id);
+        $list = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue(is_array($list));
+    }
+
+    /**
+     * CardList测试数据提供器
      * @return array
      */
     public function CardListDataProvider() {
