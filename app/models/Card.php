@@ -11,12 +11,12 @@
  * Class CardList
  * @property int $id
  * @property string $title 标题
+ * @property string $description 描述
  * @property int $creator_id 创建人ID
- * @property int $board_id 看板ID
- * @property Board $board 看板
- * @property Card[] $cards 卡片
+ * @property int $card_list_id 卡片列表ID
+ * @property CardList $cardList 看板
  */
-class CardList extends Model{
+class Card extends Model{
 
     /**
      * 关系定义，从属于User，获取
@@ -27,19 +27,11 @@ class CardList extends Model{
     }
 
     /**
-     * 关系定义，从属于Board，获取
+     * 关系定义，从属于CardList，获取
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function board(){
-        return $this->belongsTo('board','board_id','id');
-    }
-
-    /**
-     * 关系定义，拥有Card，获取
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function cards(){
-        return $this->hasMany('card','card_list_id','id');
+    public function cardList(){
+        return $this->belongsTo('cardList','card_list_id','id');
     }
 
     /**
@@ -51,7 +43,7 @@ class CardList extends Model{
             $this->getAttributes(), array(
             'title' => 'required',
             'creator_id'=>'required|integer',
-            'board_id'=>'required|integer'
+            'card_list_id'=>'required|integer'
         ));
     }
 } 
