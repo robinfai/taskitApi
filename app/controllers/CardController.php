@@ -16,6 +16,7 @@ class CardController extends BaseController{
     public function create(){
         $card = new Card();
         $card->title = Input::get('title');
+        $card->description = '';
         $card->card_list_id = Input::get('card_list_id');
         $user = Auth::user();
         $card->creator_id = $user->id;
@@ -79,4 +80,37 @@ class CardController extends BaseController{
         }
 
     }
+
+    /**
+     * 添加卡片颜色
+     * @param $id
+     * @param $color
+     * @return \Illuminate\Http\Response
+     */
+    public function addColor($id,$color){
+        $card = Card::findOrFail($id);
+        /* @var $card Card */
+        if ($card->addColor($color)) {
+            return Response::make($card->hasColor($color)->toJson(), 200);
+        } else {
+            return Response::make($card->getErrors(), 404);
+        }
+    }
+
+    /**
+     * 移至卡片颜色
+     * @param $id
+     * @param $color
+     * @return \Illuminate\Http\Response
+     */
+    public function removeColor($id,$color){
+        $card = Card::findOrFail($id);
+        /* @var $card Card */
+        if ($card->removeColor($color)) {
+            return Response::make(json_encode(true));
+        } else {
+            return Response::make($card->getErrors(), 404);
+        }
+    }
+
 } 

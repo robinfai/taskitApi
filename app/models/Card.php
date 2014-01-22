@@ -46,4 +46,58 @@ class Card extends Model{
             'card_list_id'=>'required|integer'
         ));
     }
+
+    /**
+     * 卡片添加颜色
+     * @param $color
+     * @return bool|string
+     */
+    public function addColor($color){
+        $cardColor = new CardColor();
+        $cardColor->card_id = $this->id;
+        $cardColor->color=$color;
+
+        if ($cardColor->validate() && $cardColor->save()) {
+            $this->cardList->board->addEventFlow("对[{$this->title}]卡片添加了颜色：{$color}");
+            return $cardColor->toJson();
+        } else {
+            $this->addError('color',$cardColor->getErrors());
+            return false;
+        }
+    }
+
+
+    /**
+     * 移除卡片颜色
+     * @param $color
+     * @return bool
+     */
+    public function removeColor($color){
+        /* @var $cardColor CardColor */
+        if (CardColor::where('card_id','=',$this->id)->where('color','=',$color)->delete()) {
+            $this->cardList->board->addEventFlow("对[{$this->title}]卡片移除了颜色：{$color}");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 卡片拥有颜色
+     * @param $color
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|static
+     */
+    public function hasColor($color){
+        return !!$this->getColor($color);
+    }
+
+    /**
+     * 获取卡片颜色
+     * @param string $color
+     * @return CardColor
+     */
+    public function getColor($color){
+        $color = CardColor::where('card_id','=',$this->id)->where('color','=',$color)->first();
+        return $color;
+    }
 } 
