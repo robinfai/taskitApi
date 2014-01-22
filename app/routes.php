@@ -91,5 +91,12 @@ Route::group(array('before' => 'auth'), function() {
     Route::any('board', 'BoardController@index');
 
     //cardList相关路由
+    Route::any('cardList/getList/{id}', 'CardListController@index');
     Route::any('cardList/create', 'CardListController@create');
+    Route::any('cardList/update/{id}', 'CardListController@update');
+
+    //card相关路由
+    Route::any('card/getList/{id}', 'CardController@index');
+    Route::any('card/create', 'CardController@create');
+    Route::any('card/update/{id}', 'CardController@update');
 });

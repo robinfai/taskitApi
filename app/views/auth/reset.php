@@ -10,9 +10,9 @@
 <form action="." method="post">
     <?php if (Session::has('error')) echo trans(Session::get('reason')); ?>
 
-    <input type="hidden" name="token" value="<?php echo $token ?>">
-    <input type="text" name="email">
-    <input type="password" name="password">
-    <input type="password" name="password_confirmation">
+    <input type="hidden" name="token" value="<?php echo $token ?>" />
+    <input type="text" name="email" />
+    <input type="password" name="password" />
+    <input type="password" name="password_confirmation" />
     <input type="submit" value="submit"/>
 </form>

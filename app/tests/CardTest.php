@@ -7,7 +7,7 @@
  * @version $Id: CardListTest.php 2013-12-21 09:32 robin.fai $
  */
 
-class CardListTest extends TestCase{
+class CardTest extends TestCase{
 
     public static $isTruncate = false;
 
@@ -21,34 +21,34 @@ class CardListTest extends TestCase{
         Board::boot();
         if (!self::$isTruncate) {
             self::$isTruncate = true;
-            DB::table('card_lists')->delete();
+            DB::table('cards')->delete();
         }
     }
 
     /**
      * 测试创建Board
-     * @dataProvider CardListDataProvider
+     * @dataProvider CardDataProvider
      */
     public function testCreate($title){
         $board = Board::all()->first();
-        $data = array('title'=>$title,'board_id'=>$board->id);
-        $this->client->request('POST','/cardList/create',$data);
-        $board = json_decode($this->client->getResponse()->getContent(), true);
+        $cardList = $board->cardLists->first();
+        $data = array('title'=>$title,'card_list_id'=>$cardList->id);
+        $this->client->request('POST','/card/create',$data);
+        $card = json_decode($this->client->getResponse()->getContent(), true);
 
-        $this->assertTrue($data['title'] == $board['title']);
-        return $board;
+        $this->assertTrue($data['title'] == $card['title']);
     }
 
     /**
      * 测试更新Board
      * @depends testCreate
-     * @dataProvider CardListDataProvider
+     * @dataProvider CardDataProvider
      */
     public function testUpdate($title){
-        $cardList = CardList::where('title','=',$title)->first();
+        $card = Card::where('title','=',$title)->first();
 
-        $data = array('title'=>$title.'-update','id'=>$cardList->id);
-        $this->client->request('POST','/cardList/update/'.$cardList->id,$data);
+        $data = array('title'=>$title.'-update','id'=>$card->id);
+        $this->client->request('POST','/card/update/'.$card->id,$data);
         $board = json_decode($this->client->getResponse()->getContent(), true);
 
         $this->assertTrue($data['title'] == $board['title']);
@@ -56,20 +56,20 @@ class CardListTest extends TestCase{
 
 
     /**
-     * CardList
+     * Card
      */
-    public function testGetList(){
-        $board = Auth::user()->boards->first();
-        $this->client->request('GET','/cardList/getList/'.$board->id);
+    public function testGet(){
+        $cardList = Auth::user()->boards->first()->cardLists->first();
+        $this->client->request('GET','/card/getList/'.$cardList->id);
         $list = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertTrue(is_array($list));
     }
 
     /**
-     * CardList测试数据提供器
+     * Card测试数据提供器
      * @return array
      */
-    public function CardListDataProvider() {
+    public function CardDataProvider() {
         $data = array();
         for ($i = 0; $i < 2; $i++) {
             $title = 'title' . $i;

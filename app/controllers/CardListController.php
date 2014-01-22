@@ -33,4 +33,50 @@ class CardListController extends BaseController{
             return Response::make($cardList->getErrors(), 404);
         }
     }
+
+    /**
+     * 更新card list
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        $cardList = CardList::findOrFail($id);
+        /* @var $cardList CardList */
+        $cardList->title = Input::get('title');
+
+        if(!$cardList->board->member(Auth::user()->id)){
+            return Response::make('user not board member', 200);
+        }
+
+        $validator = $cardList->getValidator();
+        if ($validator->fails()) {
+            $messages = $validator->messages();
+            return Response::make($messages, 200);
+        }
+
+        if ($cardList->save()) {
+            $originalTitle = $cardList->getOriginal('title');
+            $cardList->board->addEventFlow("重命卡片列表标题(原标题:{$originalTitle})");
+            return Response::make($cardList->toJson(), 200);
+        } else {
+            return Response::make($cardList->getErrors(), 404);
+        }
+    }
+
+    /**
+     * cardList列表
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function index($id){
+        $board = Board::findOrFail($id);
+        /* @var $board Board*/
+        if($board->member(Auth::user()->id)){
+            return Response::make($board->cardLists->toJson(), 200);
+        }else{
+            return Response::make('card list not found', 404);
+        }
+
+    }
 } 
