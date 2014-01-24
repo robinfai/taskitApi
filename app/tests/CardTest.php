@@ -56,6 +56,36 @@ class CardTest extends TestCase{
 
 
     /**
+     * 测试更新Board
+     * @depends testUpdate
+     * @dataProvider CardColorProvider
+     */
+    public function testAddColor($color){
+        $list = Card::all();
+        foreach($list as $card){
+            /* @var $card Card*/
+            $card->addColor($color);
+        }
+        $this->assertTrue($card->hasColor($color));
+    }
+
+    /**
+     * 测试更新Board
+     * @depends testUpdate
+     * @dataProvider CardColorProvider
+     */
+    public function testRemoveColor($color){
+        $list = Card::all();
+        foreach($list as $card){
+            /* @var $card Card*/
+            $card->removeColor($color);
+        }
+        $result = $card->hasColor($color);
+        $this->assertFalse($result);
+    }
+
+
+    /**
      * Card
      */
     public function testGet(){
@@ -76,5 +106,13 @@ class CardTest extends TestCase{
             $data[] = array('title' => $title);
         }
         return $data;
+    }
+
+    /**
+     * CardColor测试数据提供器
+     * @return array
+     */
+    public function CardColorProvider() {
+        return array(array('green'),array('yellow'),array('orange'),array('red'),array('purple'),array('blue'));
     }
 } 
