@@ -91,7 +91,7 @@ class CardController extends BaseController{
         $card = Card::findOrFail($id);
         /* @var $card Card */
         if ($card->addColor($color)) {
-            return Response::make($card->hasColor($color)->toJson(), 200);
+            return Response::make(json_encode($card->hasColor($color)), 200);
         } else {
             return Response::make($card->getErrors(), 404);
         }

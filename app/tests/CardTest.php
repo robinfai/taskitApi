@@ -26,7 +26,7 @@ class CardTest extends TestCase{
     }
 
     /**
-     * 测试创建Board
+     * 测试创建Card
      * @dataProvider CardDataProvider
      */
     public function testCreate($title){
@@ -40,7 +40,7 @@ class CardTest extends TestCase{
     }
 
     /**
-     * 测试更新Board
+     * 测试更新Card
      * @depends testCreate
      * @dataProvider CardDataProvider
      */
@@ -56,7 +56,7 @@ class CardTest extends TestCase{
 
 
     /**
-     * 测试更新Board
+     * 测试Card添加颜色
      * @depends testUpdate
      * @dataProvider CardColorProvider
      */
@@ -64,13 +64,14 @@ class CardTest extends TestCase{
         $list = Card::all();
         foreach($list as $card){
             /* @var $card Card*/
-            $card->addColor($color);
+            $this->client->request('GET',"/card/addColor/{$card->id}/{$color}");
+            $this->assertTrue(json_decode($this->client->getResponse()->getContent(), true));
         }
         $this->assertTrue($card->hasColor($color));
     }
 
     /**
-     * 测试更新Board
+     * 测试Card移除颜色
      * @depends testUpdate
      * @dataProvider CardColorProvider
      */
@@ -78,7 +79,9 @@ class CardTest extends TestCase{
         $list = Card::all();
         foreach($list as $card){
             /* @var $card Card*/
-            $card->removeColor($color);
+            $this->client->request('GET',"/card/removeColor/{$card->id}/{$color}");
+            $result = json_decode($this->client->getResponse()->getContent(), true);
+            $this->assertTrue($result);
         }
         $result = $card->hasColor($color);
         $this->assertFalse($result);
