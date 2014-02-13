@@ -113,4 +113,14 @@ class CardController extends BaseController{
         }
     }
 
+    /**
+     * 设置完成时间
+     */
+    public function setCompletionTime($id){
+        $card = Card::findOrFail($id);
+        /* @var $card Card*/
+        $card->completion_time = Input::get('completion_time');
+        return Response::make(json_encode($card->save()));
+    }
+
 } 

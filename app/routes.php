@@ -102,4 +102,6 @@ Route::group(array('before' => 'auth'), function() {
 
     Route::any('card/addColor/{id}/{color}', 'CardController@addColor');
     Route::any('card/removeColor/{id}/{color}', 'CardController@removeColor');
+
+    Route::any('card/setCompletionTime/{id}', 'CardController@setCompletionTime');
 });

@@ -87,6 +87,26 @@ class CardTest extends TestCase{
         $this->assertFalse($result);
     }
 
+    /**
+     * 测试Card设置完成时间
+     * @depends testUpdate
+     * @dataProvider CardColorProvider
+     */
+    public function testSetCompletionTime(){
+        $list = Card::all();
+        foreach($list as $card){
+            /* @var $card Card*/
+            $dateTime = date('Y-m-d H:i:s',time() + rand(1,86400));
+            $this->client->request('POST',"/card/setCompletionTime/{$card->id}",array('completion_time'=>$dateTime));
+            $result = $this->client->getResponse()->getContent();
+            Log::error($result);
+            $result = json_decode($result, true);
+            $this->assertTrue($result);
+            $card = Card::find($card->id);
+            $this->assertTrue($card->completion_time === $dateTime);
+        }
+    }
+
 
     /**
      * Card

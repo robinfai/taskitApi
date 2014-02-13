@@ -15,6 +15,7 @@
  * @property int $creator_id 创建人ID
  * @property int $card_list_id 卡片列表ID
  * @property CardList $cardList 看板
+ * @property string $completion_time 完成时间
  */
 class Card extends Model{
 
