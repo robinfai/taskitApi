@@ -67,7 +67,6 @@ class CardTest extends TestCase{
             $this->client->request('GET',"/card/addColor/{$card->id}/{$color}");
             $this->assertTrue(json_decode($this->client->getResponse()->getContent(), true));
         }
-        $this->assertTrue($card->hasColor($color));
     }
 
     /**
@@ -83,8 +82,6 @@ class CardTest extends TestCase{
             $result = json_decode($this->client->getResponse()->getContent(), true);
             $this->assertTrue($result);
         }
-        $result = $card->hasColor($color);
-        $this->assertFalse($result);
     }
 
     /**
