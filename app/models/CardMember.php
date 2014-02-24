@@ -37,7 +37,7 @@ class CardMember extends Model {
     public function getValidator() {
         return Validator::make(
             $this->getAttributes(), array(
-                'card_id' => 'required|unique_with:Card_members,card_id,user_id',
+                'card_id' => 'required|unique_with:card_members,card_id,user_id',
                 'user_id' => 'required',
         ));
     }
