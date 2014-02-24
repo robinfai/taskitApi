@@ -14,7 +14,8 @@
  * @property string $description 描述
  * @property int $creator_id 创建人ID
  * @property int $card_list_id 卡片列表ID
- * @property CardList $cardList 看板
+ * @property CardList $cardList 卡牌列表
+ * @property Board $board 看板
  * @property string $completion_time 完成时间
  */
 class Card extends Model{
@@ -33,6 +34,23 @@ class Card extends Model{
      */
     public function cardList(){
         return $this->belongsTo('cardList','card_list_id','id');
+    }
+
+    /**
+     * 关系定义，拥有多个User，获取所有的成员
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function members(){
+        return $this->hasMany('CardMember','card_id','id');
+    }
+
+    /**
+     * 根据ID获取成员模型
+     * @param int $id
+     * @return mixed
+     */
+    public function member($id){
+        return $this->members()->where('user_id','=',$id)->first();
     }
 
     /**

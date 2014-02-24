@@ -123,4 +123,50 @@ class CardController extends BaseController{
         return Response::make(json_encode($card->save()));
     }
 
+
+    /**
+     * 添加成员
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function addMember($id)
+    {
+        $card = Card::findOrFail($id);
+        /* @var $card Card */
+        $cardMember = new CardMember();
+        $cardMember->card_id = $id;
+        $cardMember->user_id = Input::get('user_id');
+
+        $validator = $cardMember->getValidator();
+        if ($validator->fails()) {
+            $messages = $validator->messages();
+            return Response::make($messages, 200);
+        }
+
+        if($cardMember->save()){
+            $card->cardList->board->addEventFlow("添加成员".$cardMember->user->username);
+            return Response::make($cardMember->toJson());
+        }else{
+            return Response::make($cardMember->getErrors(), 200);
+        }
+    }
+
+    /**
+     * 移除成员
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    public function removeMember($id){
+        $card = Card::findOrFail($id);
+        /* @var $card Card */
+        $cardMember = $card->member(Input::get('user_id'));
+        /* @var $cardMember CardMember */
+        if($cardMember){
+            $cardMember->delete();
+            $card->cardList->board->addEventFlow("移除成员".$cardMember->user->username);
+            return Response::make(json_encode(true));
+        }else{
+            return Response::make(json_encode(false));
+        }
+    }
 } 

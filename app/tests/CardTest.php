@@ -116,6 +116,50 @@ class CardTest extends TestCase{
     }
 
     /**
+     * 测试Card添加成员
+     * @depends testUpdate
+     * @dataProvider CardDataProvider
+     */
+    public function testAddMember($title){
+        $card = Card::where('title','=',$title.'-update')->first();
+        $member = User::all()->last();
+        $data = array('user_id'=>$member->id);
+        $this->client->request('POST','/card/addMember/'.$card->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($data['user_id'] == $response['user_id']);
+        $this->client->request('POST','/card/addMember/'.$card->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue(count($response['card_id'])===1);
+    }
+
+    /**
+     * 测试Card移除成员
+     * @depends testAddMember
+     * @dataProvider CardDataProvider
+     */
+    public function testRemoveMember($title){
+        $card = Card::where('title','=',$title.'-update')->first();
+        $member = User::all()->last();
+        $data = array('user_id'=>$member->id);
+        $this->client->request('POST','/card/removeMember/'.$card->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($response);
+        $this->client->request('POST','/card/removeMember/'.$card->id,$data);
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue(!$response);
+
+        $member = User::all()->first();
+        $data = array('user_id'=>$member->id);
+        $this->client->request('POST','/card/removeMember/'.$card->id,$data);
+        $this->assertResponseOk();
+        $response = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertTrue($response['status']==false);
+    }
+
+    /**
      * Card测试数据提供器
      * @return array
      */
